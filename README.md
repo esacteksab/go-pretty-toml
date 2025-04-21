@@ -1,5 +1,8 @@
 ## Motivation
 
+> [!WARNING]
+> Naming is hard. While the repo is currently called `go-pretty-toml`, I'm not sure what to call the binary. `tomlfmt`, `toml-fmt`, `go-pretty-toml`, `goprettytoml`. Until then, I likely won't cut a release.
+
 I wanted pretty TOML. I wanted Go. Sorts tables and their keys alphabetically. Supports indenting 2 spaces with `-i`. Will overwrite existing file with `-w`. Can read from `stdin`.
 
 Given a TOML file:
@@ -30,9 +33,13 @@ name = "Test Config"
 
 We get this
 
-```toml
+```bash
 
-$ ./tomlfmt test.toml
+./tomlfmt test.toml
+
+```
+
+```toml
 
 name = "Test Config"
 
@@ -59,9 +66,13 @@ enabled = true
 
 By default, it will write to `stdout`. You can overwrite the file with `-w`. If you want things indented, you can pass `-i`.
 
-```toml
+```bash
 
-$ ./tomlfmt test.toml -i
+./tomlfmt test.toml -i
+
+```
+
+```toml
 
 name = "Test Config"
 
@@ -88,9 +99,13 @@ name = "Test Config"
 
 It will also read from `stdin`
 
-```toml
+```bash
 
-$ cat test.toml| ./toml-fmt -i
+cat test.toml | ./toml-fmt -i
+
+```
+
+```toml
 
 name = "Test Config"
 
