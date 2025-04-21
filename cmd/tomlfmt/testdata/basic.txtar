@@ -49,4 +49,3 @@ active = true
 exec toml-fmt input_complex.toml
 # Check complex output (note: table content is NOT indented by default)
 stdout 'name    = "Test"\nversion = 1\n\n[[database]]\nhost = "db1"\nport = 5432\n\n[[database]]\nactive = true\nhost   = "db2"\nport   = 5433\n\n[server]\nip = "10.0.0.1"\n\n[server.ports]\nhttp  = 80\nhttps = 443\n'
-

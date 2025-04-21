@@ -35,4 +35,3 @@ exec toml-fmt -i
 
 # Check stdout again
 stdout 'name    = "Test"\nversion = 1\n\n[[database]]\n  host = "db1"\n  port = 5432\n\n[[database]]\n  active = true\n  host   = "db2"\n  port   = 5433\n\n[server]\n  ip = "10.0.0.1"\n\n  [ports]\n    http  = 80\n    https = 443\n'
-
