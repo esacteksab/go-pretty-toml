@@ -1,0 +1,6 @@
+[files]
+extend-exclude = ['.goreleaser.yaml']
+
+[default.extend-words]
+Hashi = 'Hashi'
+ERRO = 'ERRO'
