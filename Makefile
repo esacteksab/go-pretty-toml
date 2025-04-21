@@ -15,7 +15,6 @@ audit: tidy fmt
 
 .PHONY: build
 build:
-
 	goreleaser build --clean --single-target --snapshot
 
 .PHONY: clean
@@ -30,13 +29,9 @@ ifneq (,$(wildcard ./coverage))
 
 endif
 
-.PHONY: container
-container: tidy
-	./scripts/build-container.sh
-
 .PHONY: fmt
 fmt:
-	go tool -modfile=go.tool.mod golines --base-formatter=gofumpt -w .
+	golines --base-formatter=gofumpt -w .
 	go tool -modfile=go.tool.mod gofumpt -l -w -extra .
 
 .PHONY: lint

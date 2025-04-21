@@ -1,27 +1,132 @@
 ## Motivation
 
-I've started dipping my toes back into Go and I found that there is a common set of tools I use. This is an attempt to capture that to reduce duplication and toil. This is not meant to be a one-size-fits-all or an all-in-one solution, rather, it's a boilerplate. While this is focused towards Go, you could remove the Go stuff and still have a good foundation. I just didn't want to spiral or run down the rabbit hole of what it might look like to have a base template, then language-specific templates.
+I wanted pretty TOML. I wanted Go. Sorts tables and their keys alphabetically. Supports indenting 2 spaces with `-i`. Will overwrite existing file with `-w`. Can read from `stdin`.
 
-## Tools
+Given a TOML file:
 
-In no particular order, what exists here is defined below.
+```toml
+name = "Test Config"
 
-<!-- keep-sorted start case=no -->
+[[database]]
+  host  = "db1.example.com"
+  creds = "user:pass"
 
-- [check-jsonschema](https://check-jsonschema.readthedocs.io/en/latest/)
-- [Dependabot](https://github.com/dependabot)
-- [EditorConfig](https://editorconfig.org/)
-- [golangci-lint](https://golangci-lint.run/)
-- [GoReleaser](https://goreleaser.com/)
-- [keep-sorted](https://github.com/google/keep-sorted)
-- [Makefile](https://www.gnu.org/software/make/manual/make.html#Introduction)
-- [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)
-- [Mdformat](https://mdformat.readthedocs.io/en/stable/)
-- [pre-commit](https://pre-commit.com/)
-- [Prettier](https://prettier.io/)
-- [shellcheck-py](https://github.com/shellcheck-py/shellcheck-py)
-- [typos](https://github.com/crate-ci/typos/)
+        [client]
+        timeout = 30
 
-<!-- keep-sorted end -->
+[server]
+  ip   = "127.0.0.1"
+  port = 8080
 
-This is how **_I_** set up a Go project hosted on GitHub. I'm a novice. It's likely "wrong". Like everything I do, it's founded in an attempt to learn and to continue to grow, so I'm open to your ideas and suggestions. Pull requests welcome, but understand this reflects how _my_ brain works and while your PR may make sense, it may not match my mental model or workflow. If you like what's here, and want to use it but wish something were different and I don't accept the PR, don't take it personally, fork this repo and create your own template. But please don't let this message discourage you from opening a PR or creating an Issue to start a discussion, I don't know what I don't know, if you see something, say something, please.
+    [tls]
+    enabled = true
+    cert    = "/path/to/cert.pem"
+
+[[database]]
+  host  = "db2.example.com"
+  creds = "admin:secret"
+
+```
+
+We get this
+
+```toml
+
+$ ./tomlfmt test.toml
+
+name = "Test Config"
+
+[[database]]
+creds = "user:pass"
+host  = "db1.example.com"
+
+[[database]]
+creds = "admin:secret"
+host  = "db2.example.com"
+
+[client]
+timeout = 30
+
+[server]
+ip   = "127.0.0.1"
+port = 8080
+
+[tls]
+cert    = "/path/to/cert.pem"
+enabled = true
+
+```
+
+By default, it will write to `stdout`. You can overwrite the file with `-w`. If you want things indented, you can pass `-i`.
+
+```toml
+
+$ ./tomlfmt test.toml -i
+
+name = "Test Config"
+
+[[database]]
+  creds = "user:pass"
+  host  = "db1.example.com"
+
+[[database]]
+  creds = "admin:secret"
+  host  = "db2.example.com"
+
+[client]
+  timeout = 30
+
+[server]
+  ip   = "127.0.0.1"
+  port = 8080
+
+[tls]
+  cert    = "/path/to/cert.pem"
+  enabled = true
+
+```
+
+It will also read from `stdin`
+
+```toml
+
+$ cat test.toml| ./toml-fmt -i
+
+name = "Test Config"
+
+[[database]]
+  creds = "user:pass"
+  host  = "db1.example.com"
+
+[[database]]
+  creds = "admin:secret"
+  host  = "db2.example.com"
+
+[client]
+  timeout = 30
+
+[server]
+  ip   = "127.0.0.1"
+  port = 8080
+
+[tls]
+  cert    = "/path/to/cert.pem"
+  enabled = true
+
+```
+
+```bash
+./tomlfmt -h
+usage: toml-fmt [<flags>] [<filename>]
+
+Formats TOML files with alignment and optional indentation.
+
+
+Flags:
+  -h, --[no-]help    Show context-sensitive help (also try --help-long and --help-man).
+  -w, --[no-]write   Write result back to the source file instead of stdout.
+  -i, --[no-]indent  Indent output using two spaces.
+
+Args:
+  [<filename>]  Input TOML file (optional, reads from stdin if omitted)
+```

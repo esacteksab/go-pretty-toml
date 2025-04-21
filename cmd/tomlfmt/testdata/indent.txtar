@@ -1,0 +1,38 @@
+# Test formatting with indentation flag -i
+
+-- input.toml --
+name = "Test"
+version = 1
+
+[server]
+ip = "10.0.0.1"
+
+  [server.ports] # Regular nested table
+  http = 80
+  https = 443
+
+[[database]] # Array table
+host = "db1"
+port = 5432
+
+[[database]] # Another element
+host = "db2"
+port = 5433
+active = true
+
+
+# Execute with file and -i flag
+exec toml-fmt input.toml -i
+
+# Check stdout (now with 2-space indents within tables/array tables)
+# Note: the align padding still happens within the indented lines
+stdout 'name    = "Test"\nversion = 1\n\n[[database]]\n  host = "db1"\n  port = 5432\n\n[[database]]\n  active = true\n  host   = "db2"\n  port   = 5433\n\n[server]\n  ip = "10.0.0.1"\n\n  [ports]\n    http  = 80\n    https = 443\n'
+
+
+# Test indentation from stdin
+stdin input.toml
+exec toml-fmt -i
+
+# Check stdout again
+stdout 'name    = "Test"\nversion = 1\n\n[[database]]\n  host = "db1"\n  port = 5432\n\n[[database]]\n  active = true\n  host   = "db2"\n  port   = 5433\n\n[server]\n  ip = "10.0.0.1"\n\n  [ports]\n    http  = 80\n    https = 443\n'
+

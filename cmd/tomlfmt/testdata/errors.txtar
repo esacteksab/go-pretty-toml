@@ -1,0 +1,34 @@
+# Test error handling
+
+# File not found
+! exec toml-fmt non_existent_file.toml
+stderr 'Error: opening file ''non_existent_file.toml'': open non_existent_file.toml: no such file or directory'
+
+# Invalid TOML syntax
+-- bad_syntax.toml --
+key = "value
+[table
+
+! exec toml-fmt bad_syntax.toml
+stderr 'Error parsing TOML.*line 1.*expected newline.*string'
+
+
+# Flag combination error: -w with stdin
+-- any_input.toml --
+a=1
+
+stdin any_input.toml
+! exec toml-fmt -w
+stderr 'Error: cannot use -w flag when reading from stdin'
+
+
+# Too many arguments error
+# We might only be able to check the exit code reliably here.
+! exec toml-fmt file1 file2
+stderr 'Error: unexpected file2'
+
+# Test help flag
+exec toml-fmt -h
+stdout 'usage: toml-fmt'
+stdout 'Formats TOML files with alignment and optional indentation.'
+stderr '^$'

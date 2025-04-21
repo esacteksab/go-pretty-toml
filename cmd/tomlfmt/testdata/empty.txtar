@@ -1,0 +1,23 @@
+# Test empty input handling
+
+# Empty file to stdout
+-- empty.toml --
+
+exec toml-fmt empty.toml
+stdout '^$' # Expect empty stdout
+stderr '^$' # Expect empty stderr
+
+
+# Empty file with -w (should result in empty file)
+# Create copy to compare against
+-- expect_empty.toml --
+
+exec toml-fmt empty.toml -w
+stderr '^$'
+cmp empty.toml expect_empty.toml
+
+
+# Empty stdin to stdout
+exec toml-fmt
+stdout '^$'
+stderr '^$'

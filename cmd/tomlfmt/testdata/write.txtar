@@ -1,0 +1,49 @@
+# Test writing back to file (-w)
+
+# Create an initial file state
+-- input.toml --
+key1="val" # Needs alignment
+[table]
+a=1
+longer=2
+
+# Define the expected state AFTER formatting (no indent)
+-- expect_no_indent.toml --
+key1 = "val"
+
+[table]
+a      = 1
+longer = 2
+
+# Run with -w
+exec toml-fmt input.toml -w
+# Check stderr is empty
+stderr '^$'
+# Check the file content matches the expected state
+cmp input.toml expect_no_indent.toml
+
+
+# --- Test -w and -i together ---
+
+# Create a different initial file
+-- input_i.toml --
+key1="val"
+[table]
+a=1
+longer=2
+
+# Define expected state with indent
+-- expect_indent.toml --
+key1 = "val"
+
+[table]
+  a      = 1
+  longer = 2
+
+
+# Run with -w and -i
+exec toml-fmt input_i.toml -w -i
+# Check stderr is empty
+stderr '^$'
+# Check the file content
+cmp input_i.toml expect_indent.toml

@@ -1,0 +1,52 @@
+# Test basic formatting to stdout (no indent)
+
+# Create an input file
+-- input.toml --
+# Comment should be removed
+key1 = "value1"
+number = 123 # Another comment
+
+[table]
+ longkey = "long value" # Alignment check
+ short   = true
+
+# Execute the command with the file
+exec toml-fmt input.toml
+
+# Check the standard output (aligned, no comments, no indent)
+stdout 'key1   = "value1"\nnumber = 123\n\n[table]\nlongkey = "long value"\nshort   = true\n'
+
+# Test basic formatting from stdin
+stdin input.toml
+exec toml-fmt
+
+# Check stdout again (should be the same)
+stdout 'key1   = "value1"\nnumber = 123\n\n[table]\nlongkey = "long value"\nshort   = true\n'
+
+-- input_complex.toml --
+# Check nested tables and array tables
+
+name = "Test"
+version = 1
+
+[server]
+ip = "10.0.0.1"
+
+  [server.ports] # Regular nested table
+  http = 80
+  https = 443
+
+[[database]] # Array table
+host = "db1"
+port = 5432
+
+[[database]] # Another element
+host = "db2"
+port = 5433
+active = true
+
+# Execute with complex file
+exec toml-fmt input_complex.toml
+# Check complex output (note: table content is NOT indented by default)
+stdout 'name    = "Test"\nversion = 1\n\n[[database]]\nhost = "db1"\nport = 5432\n\n[[database]]\nactive = true\nhost   = "db2"\nport   = 5433\n\n[server]\nip = "10.0.0.1"\n\n[server.ports]\nhttp  = 80\nhttps = 443\n'
+
