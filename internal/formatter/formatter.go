@@ -12,21 +12,18 @@ import (
 	"time"
 )
 
-// Format takes parsed TOML data and formats it according to the rules,
-// writing the result to the provided io.Writer.
+// Exported Entry Point
 func Format(data map[string]interface{}, indentUnit string, output io.Writer) error {
-	// Use an internal buffer for the recursive formatting functions
 	var internalBuf bytes.Buffer
-	err := formatMap(data, "", indentUnit, &internalBuf) // Call the unexported recursive function
+	// Start with an empty path for the root map
+	err := formatMap(data, []string{}, "", indentUnit, &internalBuf)
 	if err != nil {
-		return err // Propagate errors from formatting
+		return err
 	}
-	// Write the final formatted result from the buffer to the provided writer
 	_, err = internalBuf.WriteTo(output)
-	return err // Return any error from writing the output
+	return err
 }
 
-// Helper: formatTomlValue
 func formatTomlValue(v interface{}) string {
 	switch val := v.(type) {
 	case string:
@@ -40,7 +37,7 @@ func formatTomlValue(v interface{}) string {
 	case time.Time:
 		return val.Format(time.RFC3339Nano)
 	case nil:
-		return "''" // Placeholder for nil
+		return "''"
 	case []interface{}:
 		var elements []string
 		for _, item := range val {
@@ -52,13 +49,12 @@ func formatTomlValue(v interface{}) string {
 	}
 }
 
-// formatMap Helpers
-
+// formatSimpleKeys now only needs currentIndent, not path
 func formatSimpleKeys(
 	dataMap map[string]interface{},
 	simpleKeys []string,
 	maxKeyLen int,
-	currentIndent string,
+	currentIndent string, // Indent for the line itself
 	output *bytes.Buffer,
 ) {
 	for _, k := range simpleKeys {
@@ -69,8 +65,10 @@ func formatSimpleKeys(
 	}
 }
 
+// formatArrayTables needs currentPath to build header, currentIndent for position
 func formatArrayTables(
 	arrayTableKeys map[string][]interface{},
+	currentPath []string, // Path to the parent map
 	currentIndent string,
 	indentUnit string,
 	output *bytes.Buffer,
@@ -83,10 +81,17 @@ func formatArrayTables(
 
 	for _, k := range sortedArrayTableKeys {
 		arrData := arrayTableKeys[k]
+		// Construct the full path for the array table key
+		fullPath := append(append([]string{}, currentPath...), k) // Create copy before appending
+		fullPathString := strings.Join(fullPath, ".")
+
 		for i, item := range arrData {
 			subMap, ok := item.(map[string]interface{})
 			if !ok {
-				return fmt.Errorf("internal error: item in array table '%s' not a map", k)
+				return fmt.Errorf(
+					"internal error: item in array table '%s' not a map",
+					fullPathString,
+				)
 			}
 			// Add newline separator logic...
 			if output.Len() > 0 {
@@ -97,31 +102,47 @@ func formatArrayTables(
 					}
 				}
 			}
-			fmt.Fprintf(output, "%s[[%s]]\n", currentIndent, k)
+			// Header uses currentIndent for positioning, but fullPathString for the name
+			fmt.Fprintf(output, "%s[[%s]]\n", currentIndent, fullPathString)
+
+			// Content uses an increased indent level
 			nextIndent := currentIndent + indentUnit
-			err := formatMap(subMap, nextIndent, indentUnit, output)
+			// Recursive call passes the fullPath and nextIndent
+			err := formatMap(subMap, fullPath, nextIndent, indentUnit, output)
 			if err != nil {
-				return fmt.Errorf("formatting array table '%s[%d]': %w", k, i, err)
+				// Add context to the error
+				return fmt.Errorf(
+					"formatting array table '%s' index %d: %w",
+					fullPathString,
+					i,
+					err,
+				)
 			}
 		}
 	}
 	return nil
 }
 
+// formatRegularTables needs currentPath to build header, currentIndent for position
 func formatRegularTables(
 	dataMap map[string]interface{},
 	tableKeys []string,
+	currentPath []string, // Path to the parent map
 	currentIndent string,
 	indentUnit string,
 	output *bytes.Buffer,
 ) error {
 	for _, k := range tableKeys {
+		// Construct the full path for the table key
+		fullPath := append(append([]string{}, currentPath...), k) // Create copy before appending
+		fullPathString := strings.Join(fullPath, ".")
+
 		subMapInterface := dataMap[k]
 		subMap, ok := subMapInterface.(map[string]interface{})
 		if !ok {
 			return fmt.Errorf(
 				"internal error: item for table key '%s' is not a map[string]interface{} (got %T)",
-				k,
+				fullPathString, // Use full path in error
 				subMapInterface,
 			)
 		}
@@ -136,11 +157,16 @@ func formatRegularTables(
 				output.WriteString("\n")
 			}
 		}
-		fmt.Fprintf(output, "%s[%s]\n", currentIndent, k)
+		// Header uses currentIndent for positioning, but fullPathString for the name
+		fmt.Fprintf(output, "%s[%s]\n", currentIndent, fullPathString)
+
+		// Content uses an increased indent level
 		nextIndent := currentIndent + indentUnit
-		err := formatMap(subMap, nextIndent, indentUnit, output)
+		// Recursive call passes the fullPath and nextIndent
+		err := formatMap(subMap, fullPath, nextIndent, indentUnit, output)
 		if err != nil {
-			return fmt.Errorf("formatting table '%s': %w", k, err)
+			// Add context to the error
+			return fmt.Errorf("formatting table '%s': %w", fullPathString, err)
 		}
 	}
 	return nil
@@ -149,9 +175,10 @@ func formatRegularTables(
 // Main Recursive Formatting Function
 func formatMap(
 	dataMap map[string]interface{},
-	currentIndent string,
-	indentUnit string,
-	output *bytes.Buffer, // Stays as *bytes.Buffer for internal use
+	currentPath []string, // Current path of keys leading to this map
+	currentIndent string, // Current indentation string for content
+	indentUnit string, // Unit of indentation ("" or "  ")
+	output *bytes.Buffer,
 ) error {
 	keys := make([]string, 0, len(dataMap))
 	for k := range dataMap {
@@ -164,58 +191,54 @@ func formatMap(
 	tableKeys := []string{}
 	arrayTableKeys := map[string][]interface{}{}
 
-	// Pass 1: Categorize keys and find max length for simple keys
+	// Categorize keys and find max length for simple keys
 	for _, k := range keys {
 		v := dataMap[k]
-
-		//  Check for Array of Tables FIRST
 		if maybeArray, ok := v.([]interface{}); ok && len(maybeArray) > 0 {
 			isArrTable := true
-			containsMaps := false // Track if we saw *any* maps
+			containsMaps := false
 			for _, item := range maybeArray {
 				_, itemIsMap := item.(map[string]interface{})
 				if itemIsMap {
 					containsMaps = true
 				} else {
-					// Found a non-map item
 					isArrTable = false
 					if containsMaps {
+						// Generate error using the key 'k' relative to the current path
+						fullPathString := strings.Join(append(append([]string{}, currentPath...), k), ".")
 						return fmt.Errorf(
-							"key '%s': arrays cannot mix tables and non-tables", k)
+							"key '%s': arrays cannot mix tables and non-tables", fullPathString)
 					}
-					// If no maps were seen yet, break and let it be treated as a simple array later
 					break
 				}
 			}
-			// If the loop finished and it's purely an array of tables:
 			if isArrTable {
 				arrayTableKeys[k] = maybeArray
-				continue // Successfully categorized as array table
+				continue
 			}
 		}
-
-		// Check for Regular Table SECOND
 		if _, ok := v.(map[string]interface{}); ok {
 			tableKeys = append(tableKeys, k)
-			continue // Successfully categorized as regular table
+			continue
 		}
-
-		//  Otherwise, treat as Simple Key (includes simple arrays)
 		simpleKeys = append(simpleKeys, k)
 		if len(k) > maxKeyLen {
 			maxKeyLen = len(k)
 		}
-	} // End of Pass 1 loop
+	}
 
-	// Pass 2: Format sections using helpers
+	// Format sections using helpers
+	// Simple keys are printed with currentIndent
 	formatSimpleKeys(dataMap, simpleKeys, maxKeyLen, currentIndent, output)
 
-	err := formatArrayTables(arrayTableKeys, currentIndent, indentUnit, output)
+	// Array tables need the current path to build headers
+	err := formatArrayTables(arrayTableKeys, currentPath, currentIndent, indentUnit, output)
 	if err != nil {
 		return err
 	}
 
-	err = formatRegularTables(dataMap, tableKeys, currentIndent, indentUnit, output)
+	// Regular tables need the current path to build headers
+	err = formatRegularTables(dataMap, tableKeys, currentPath, currentIndent, indentUnit, output)
 	if err != nil {
 		return err
 	}
