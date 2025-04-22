@@ -1,2 +1,5 @@
 [env]
   '_'.python.venv = { path = ".venv", create = true }
+
+[tools]
+  pnpm = "10.8.0"
