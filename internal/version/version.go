@@ -31,10 +31,9 @@ func GetVersionInfo() string {
 			for _, setting := range info.Settings {
 				if setting.Key == "vcs.revision" {
 					commit = setting.Value
-					// Optionally shorten the commit hash
-					// if len(commit) > 7 {
-					// 	commit = commit[:7]
-					// }
+					if len(commit) > 7 { //nolint:mnd
+						commit = commit[:7]
+					}
 					break
 				}
 			}
@@ -61,16 +60,14 @@ func GetVersionInfo() string {
 
 	// Append Go module info if available
 	if info, ok := debug.ReadBuildInfo(); ok {
-		// info.Main contains info about the main module (your app)
+		// info.Main contains info about the main module
 		modVersion := info.Main.Version
 		if modVersion != "" && modVersion != "(devel)" { // Only show if it's a real version
 			result = fmt.Sprintf("%s\nModule Version: %s", result, modVersion)
 		}
-		// Checksum is often useful for verifying builds
 		if info.Main.Sum != "" {
 			result = fmt.Sprintf("%s\nModule Checksum: %s", result, info.Main.Sum)
 		}
-		// You could add info about dependencies (info.Deps) if desired
 	}
 
 	return result
