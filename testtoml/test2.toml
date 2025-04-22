@@ -1,0 +1,34 @@
+[[configs]]
+  Name     = 'docker-compose'
+  FileName = 'docker-compose.yaml'
+  Schemas  = ['compose-spec.json']
+
+[[configs]]
+  Name     = 'golangci-lint'
+  FileName = '.golangci.yaml'
+  Schemas  = ['v1.json', 'v2.json']
+
+[[configs]]
+  Name     = 'goreleaser'
+  FileName = '.goreleaser.yaml'
+  Schemas  = ['pro.json', 'schema.json']
+
+[[configs]]
+  Name     = 'pre-commit-config'
+  FileName = '.pre-commit-config.yaml'
+  Schemas  = ['pre-commit-config.json']
+
+[[configs]]
+  Name     = 'pre-commit-hooks'
+  FileName = '.pre-commit-hooks.yaml'
+  Schemas  = ['pre-commit-hooks.json']
+
+[[configs]]
+  Name     = 'prettierrc'
+  FileName = '.prettierrc'
+  Schemas  = ['prettierrc.json']
+
+[[configs]]
+  Name     = 'pyproject'
+  FileName = 'pyproject.toml'
+  Schemas  = ['pyproject.json']

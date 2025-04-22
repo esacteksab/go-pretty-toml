@@ -102,7 +102,7 @@ func TestFormat(t *testing.T) {
 			},
 			indentUnit:   "\t",
 			outputWriter: nil,
-			wantOutput:   "[server]\n\tip = \"1.1.1.1\"\n\n\t[ports]\n\t\thttp = 80\n",
+			wantOutput:   "[server]\n\tip = \"1.1.1.1\"\n\n\t[server.ports]\n\t\thttp = 80\n",
 			wantErr:      false,
 		},
 		{

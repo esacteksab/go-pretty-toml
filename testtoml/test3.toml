@@ -1,0 +1,35 @@
+[databases]
+
+  [databases.db1]
+    Name = "db1.use1.example.com"
+    Port = 3306
+
+    [databases.db1.engine]
+      Name    = "MariaDB"
+      Version = "10.8"
+
+  [databases.db2]
+    Name = "db2.use1.example.com"
+    Port = 3306
+
+    [databases.db2.engine]
+      Name    = "MariaDB"
+      Version = "10.8"
+
+[servers]
+
+  [servers.foo]
+    Name = "foo.example.com"
+    Port = 80
+
+    [servers.foo.OperatingSystem]
+      Name    = "Ubuntu"
+      Version = "22.04"
+
+  [servers.web]
+    Name = "web.example.com"
+    Port = 443
+
+    [servers.web.OperatingSystem]
+      Name    = "Ubuntu"
+      Version = "20.04"
