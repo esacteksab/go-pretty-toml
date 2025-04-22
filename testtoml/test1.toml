@@ -1,19 +1,24 @@
-configs = [
-  { Name = 'golangci-lint', FileName = '.golangci.yaml', Schemas = [
-    'v1.json',
-    'v2.json',
-  ] },
-  { Name = 'goreleaser', FileName = '.goreleaser.yaml', Schemas = [
-    'schema.json',
-    'pro.json',
-  ] },
-  { Name = 'pre-commit-config', FileName = '.pre-commit-config.yaml', Schemas = [
-    'pre-commit-config.json',
-  ] },
-  { Name = 'pyproject', FileName = 'pyproject.toml', Schemas = [
-    'pyproject.json',
-  ] },
-  { Name = 'prettierrc', FileName = '.prettierrc', Schemas = [
-    'prettierrc.json',
-  ] },
-]
+[[configs]]
+  FileName = ".golangci.yaml"
+  Name     = "golangci-lint"
+  Schemas  = ["v1.json", "v2.json"]
+
+[[configs]]
+  FileName = ".goreleaser.yaml"
+  Name     = "goreleaser"
+  Schemas  = ["schema.json", "pro.json"]
+
+[[configs]]
+  FileName = ".pre-commit-config.yaml"
+  Name     = "pre-commit-config"
+  Schemas  = ["pre-commit-config.json"]
+
+[[configs]]
+  FileName = "pyproject.toml"
+  Name     = "pyproject"
+  Schemas  = ["pyproject.json"]
+
+[[configs]]
+  FileName = ".prettierrc"
+  Name     = "prettierrc"
+  Schemas  = ["prettierrc.json"]
