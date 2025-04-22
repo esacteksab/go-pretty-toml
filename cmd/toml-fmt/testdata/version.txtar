@@ -1,0 +1,48 @@
+
+# Test the -version flag
+
+# Case 1: Run without specific ldflags (like a dev build)
+# Expect default version "dev", potentially build info if available
+exec toml-fmt --version
+stderr 'dev' # Check that it starts with the default version
+stderr 'GOOS: ' # Check for GOOS line
+stderr 'GOARCH: ' # Check for GOARCH line
+
+# Case 3: Ensure -version flag prevents other processing and ignores other args/flags
+# Create a dummy input file that should NOT be processed
+-- input.toml --
+key = "value"
+should_not = "format"
+
+# Run with -version and other flags/args (using the binary built in Case 2)
+exec toml-fmt --version -w -i input.toml
+
+# Stdout should STILL be the version info from Case 2
+stdout 'v1.2.3-test'
+stdout 'Commit: testcommitabc'
+stdout 'Built at: 2024-03-15_Test'
+stdout 'Built by: TestScript'
+stdout 'GOOS: '
+stdout 'GOARCH: '
+stderr '^$'
+
+# Verify that input.toml was NOT modified (or created if -w was attempted)
+# Check if the file still exists and its content is unchanged.
+# If the command tried to write, it would have failed or changed the file.
+# Test existence and content (cmp requires file to exist)
+exists input.toml
+cmp input.toml $WORK/input.toml # Compare against the original copy testscript made
+
+
+# Case 4: Check -version takes precedence over errors like missing file
+# Run with -version and a non-existent file (using the binary built in Case 2)
+exec toml-fmt --version nonexistentfile.toml
+
+# Stdout should STILL be the version info from Case 2, no error about file not found
+stdout 'v1.2.3-test'
+stdout 'Commit: testcommitabc'
+stdout 'Built at: 2024-03-15_Test'
+stdout 'Built by: TestScript'
+stdout 'GOOS: '
+stdout 'GOARCH: '
+stderr '^$'

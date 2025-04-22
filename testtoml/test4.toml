@@ -1,0 +1,28 @@
+# This is an example TOML file
+description = "A demonstration of TOML formatting"
+enabled     = true
+pi          = 3.14159
+timeout     = 500
+title       = "TOML Example"
+
+[[fruits]]
+  color = "red"
+  name  = "apple"
+  sweet = true
+
+[[fruits]]
+  color = "yellow"
+  name  = "banana"
+  sweet = true
+
+[database]
+  host            = "db.example.com"
+  max_connections = 100
+  password        = "secret"
+  port            = 5432
+  user            = "admin"
+
+[server]
+  host = "localhost"
+  port = 8080
+  tls  = false
