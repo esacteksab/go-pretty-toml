@@ -4,7 +4,6 @@
 # keep-sorted start
 
 .sass-cache/
-.tool-versions
 # Additional Ruby/bundler ignore for when you run: bundle install
 /vendor
 _site/
@@ -228,3 +227,4 @@ terraform.rc
 !.vscode/settings.json
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+__debug**
