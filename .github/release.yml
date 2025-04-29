@@ -8,33 +8,34 @@ changelog:
       labels:
         - "type: breaking"
         - "type: deprecation"
-        - "regression"
+        - "type: regression"
         - "type: revert"
 
     - title: ":rocket: New features and improvements"
       labels:
-        - "type: feat"
+        - "type: feature"
+        - "type: enhancement"
+        - "type: refactor"
 
     - title: ":lady_beetle: Bug fixes"
       labels:
         - "type: fix"
+        - "type: bug"
 
     - title: ":nail_polish: Style, UI, UX"
       labels:
-        - "type: style"
+        - "type: UX"
+        - "type: UI"
 
     - title: ":book: Documentation"
       labels:
-        - "type: docs"
+        - "type: documentation"
 
     - title: ":hammer: Build/Test Dependency Upgrades"
       labels:
-        - "dependencies"
-        - "type: test"
-        - "type: ci"
+        - "type: dependencies"
+        - "type: testing"
+        - "type: ci/cd"
         - "type: build"
         - "type: chore"
-
-    - title: ":question: What's Changed"
-      labels:
-        - "type: refactor"
+        - "type: task"
