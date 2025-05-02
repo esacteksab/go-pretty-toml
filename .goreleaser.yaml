@@ -43,7 +43,7 @@ changelog:
   use: github-native
 
 checksum:
-  name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
+  name_template: "checksums.txt"
 
 release:
   draft: true
