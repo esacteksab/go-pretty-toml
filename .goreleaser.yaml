@@ -40,11 +40,10 @@ archives:
         formats: zip
 
 changelog:
-  use: github
-  sort: asc
+  use: github-native
 
 checksum:
-  name_template: "checksums.txt"
+  name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
 
 release:
   draft: true

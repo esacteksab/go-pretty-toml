@@ -2,6 +2,10 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
+      - id: check-added-large-files
+        name: "Check Large Files"
+      - id: detect-private-key
+        name: "Detect Private Key"
       - id: trailing-whitespace
         name: "Trailing Whitespace"
         args:
@@ -116,7 +120,7 @@ repos:
           - mdformat-footnote
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.31.1
+    rev: v1.32.0
     hooks:
       - id: typos
         args: [--force-exclude]

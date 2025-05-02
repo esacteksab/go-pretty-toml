@@ -13,29 +13,30 @@ changelog:
 
     - title: ":rocket: New features and improvements"
       labels:
-        - "type: feature"
+        - "type: release"
+        - "type: feat"
         - "type: enhancement"
         - "type: refactor"
+        - "type: perf"
 
     - title: ":lady_beetle: Bug fixes"
       labels:
         - "type: fix"
-        - "type: bug"
 
-    - title: ":nail_polish: Style, UI, UX"
+    - title: ":nail_care: Style"
       labels:
-        - "type: UX"
-        - "type: UI"
+        - "type: style"
 
     - title: ":book: Documentation"
       labels:
-        - "type: documentation"
+        - "type: docs"
 
     - title: ":hammer: Build/Test Dependency Upgrades"
       labels:
         - "type: dependencies"
-        - "type: testing"
-        - "type: ci/cd"
+        - "dependencies"
+        - "type: test"
+        - "type: ci"
         - "type: build"
         - "type: chore"
         - "type: task"
