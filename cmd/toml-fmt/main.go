@@ -115,7 +115,6 @@ func getInput(
 			err = fmt.Errorf("opening %s: %w", sourceName, err) // Wrap the error with context
 			return
 		}
-		defer file.Close() //nolint:errcheck
 		inputReader = file // Assign the opened file to the input reader
 	}
 	return // Return the determined reader, names, and nil error
