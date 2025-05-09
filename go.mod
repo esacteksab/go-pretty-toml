@@ -1,6 +1,6 @@
 module github.com/esacteksab/go-pretty-toml
 
-go 1.24
+go 1.24.3
 
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0

@@ -27,6 +27,7 @@ _site/
 *.so
 # Test binary, built with `go test -c`
 *.test
+coverdata/*
 # Go workspace file
 go.work
 go.work.sum
