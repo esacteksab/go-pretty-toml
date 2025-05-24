@@ -9,8 +9,8 @@ updates:
           - "patch"
     schedule:
       interval: "weekly"
-      day: "saturday"
-      time: "03:00"
+      day: "friday"
+      time: "17:00"
       timezone: "America/Chicago"
 
   - package-ecosystem: "gomod"
@@ -22,8 +22,8 @@ updates:
           - "patch"
     schedule:
       interval: "weekly"
-      day: "saturday"
-      time: "03:00"
+      day: "friday"
+      time: "17:00"
 
       timezone: "America/Chicago"
   - package-ecosystem: "npm"
@@ -35,22 +35,22 @@ updates:
           - "patch"
     schedule:
       interval: "weekly"
-      day: "saturday"
-      time: "03:00"
+      day: "friday"
+      time: "17:00"
       timezone: "America/Chicago"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "saturday"
-      time: "03:00"
+      day: "friday"
+      time: "17:00"
       timezone: "America/Chicago"
 
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "saturday"
-      time: "03:00"
+      day: "friday"
+      time: "17:00"
       timezone: "America/Chicago"
