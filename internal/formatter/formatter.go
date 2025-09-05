@@ -23,7 +23,7 @@ import (
 //
 // Returns:
 //   - error: If any formatting operation fails
-func Format(data map[string]interface{}, indentUnit string, output io.Writer) error {
+func Format(data map[string]any, indentUnit string, output io.Writer) error {
 	var internalBuf bytes.Buffer // Use a buffer to accumulate the formatted output
 	// Start with an empty path for the root map. The path represents the nested structure of the TOML file.
 	err := formatMap(data, []string{}, "", indentUnit, &internalBuf)
@@ -43,7 +43,7 @@ func Format(data map[string]interface{}, indentUnit string, output io.Writer) er
 //
 // Returns:
 //   - string: TOML string representation of the value
-func formatTomlValue(v interface{}) string {
+func formatTomlValue(v any) string {
 	switch val := v.(type) {
 	case string:
 		return fmt.Sprintf("%q", val) // Quote strings
@@ -57,7 +57,7 @@ func formatTomlValue(v interface{}) string {
 		return val.Format(time.RFC3339Nano) // Format time in RFC3339 format (most precise)
 	case nil:
 		return "''" // Represent nil as empty quoted string
-	case []interface{}:
+	case []any:
 		// Handle arrays by formatting each element and joining with commas
 		var elements []string
 		for _, item := range val {
@@ -79,7 +79,7 @@ func formatTomlValue(v interface{}) string {
 //   - currentIndent: Current indentation string
 //   - output: Buffer where formatted output is written
 func formatSimpleKeys(
-	dataMap map[string]interface{},
+	dataMap map[string]any,
 	simpleKeys []string,
 	maxKeyLen int,
 	currentIndent string, // Indent for the line itself
@@ -118,7 +118,7 @@ func formatSimpleKeys(
 // Returns:
 //   - error: If any formatting operation fails
 func formatArrayTables(
-	arrayTableKeys map[string][]interface{},
+	arrayTableKeys map[string][]any,
 	currentPath []string, // Path to the parent map
 	currentIndent string,
 	indentUnit string,
@@ -145,7 +145,7 @@ func formatArrayTables(
 		) // Convert the path to a dot-separated string
 
 		for i, item := range arrData {
-			subMap, ok := item.(map[string]interface{}) // Type assert each item as a map
+			subMap, ok := item.(map[string]any) // Type assert each item as a map
 			if !ok {
 				return fmt.Errorf(
 					"internal error: item in array table '%s' not a map",
@@ -209,7 +209,7 @@ func formatArrayTables(
 // Returns:
 //   - error: If any formatting operation fails
 func formatRegularTables(
-	dataMap map[string]interface{},
+	dataMap map[string]any,
 	tableKeys []string,
 	currentPath []string, // Path to the parent map
 	currentIndent string,
@@ -227,8 +227,8 @@ func formatRegularTables(
 			".",
 		) // Join the path elements with dots
 
-		subMapInterface := dataMap[k]                          // Get the value associated with the key from the map
-		subMap, ok := subMapInterface.(map[string]interface{}) // Assert that the value is a map
+		subMapInterface := dataMap[k]                  // Get the value associated with the key from the map
+		subMap, ok := subMapInterface.(map[string]any) // Assert that the value is a map
 		if !ok {
 			return fmt.Errorf(
 				"internal error: item for table key '%s' is not a map[string]interface{} (got %T)",
@@ -284,7 +284,7 @@ func formatRegularTables(
 // Returns:
 //   - error: If any formatting operation fails
 func formatMap(
-	dataMap map[string]interface{},
+	dataMap map[string]any,
 	currentPath []string, // Current path of keys leading to this map
 	currentIndent string, // Current indentation string for content
 	indentUnit string, // Unit of indentation ("" or "  ")
@@ -301,21 +301,21 @@ func formatMap(
 	}
 	sort.Strings(keys) // Sort the slice of keys alphabetically
 
-	maxKeyLen := 0                               // Initialize the maximum key length to 0
-	simpleKeys := []string{}                     // Slice to store keys of simple key-value pairs
-	tableKeys := []string{}                      // Slice to store keys of tables
-	arrayTableKeys := map[string][]interface{}{} // Map to store keys of array tables and their associated data
+	maxKeyLen := 0                       // Initialize the maximum key length to 0
+	simpleKeys := []string{}             // Slice to store keys of simple key-value pairs
+	tableKeys := []string{}              // Slice to store keys of tables
+	arrayTableKeys := map[string][]any{} // Map to store keys of array tables and their associated data
 
 	// Categorize keys and find max length for simple keys
 	for _, k := range keys {
 		v := dataMap[k] // Get the value associated with the key
-		if maybeArray, ok := v.([]interface{}); ok &&
+		if maybeArray, ok := v.([]any); ok &&
 			len(maybeArray) > 0 { // Check if it is a non-empty array
 			isArrTable := true    // Assume its an array table initially
 			containsMaps := false // Flag to track if the array contains map
 			// Check if array contains maps (for array tables)
 			for _, item := range maybeArray {
-				_, itemIsMap := item.(map[string]interface{}) // type assert the item
+				_, itemIsMap := item.(map[string]any) // type assert the item
 				if itemIsMap {
 					containsMaps = true // set the flag to true
 				} else {
@@ -335,7 +335,7 @@ func formatMap(
 			}
 		}
 		// Check if value is a regular table
-		if _, ok := v.(map[string]interface{}); ok {
+		if _, ok := v.(map[string]any); ok {
 			tableKeys = append(tableKeys, k) // Add the key to the list of table keys
 			continue                         // Move to the next key
 		}
