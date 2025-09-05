@@ -13,7 +13,7 @@ import (
 func TestFormatTomlValue(t *testing.T) {
 	testCases := []struct {
 		name  string
-		input interface{}
+		input any
 		want  string
 	}{
 		{"string", "hello", `"hello"`},
@@ -23,8 +23,8 @@ func TestFormatTomlValue(t *testing.T) {
 		{"bool_false", false, "false"},
 		{"nil", nil, "''"},
 		{"time", time.Date(2023, 1, 10, 15, 4, 5, 0, time.UTC), "2023-01-10T15:04:05Z"},
-		{"simple_array", []interface{}{1, "a", true}, `[1, "a", true]`},
-		{"empty_array", []interface{}{}, `[]`},
+		{"simple_array", []any{1, "a", true}, `[1, "a", true]`},
+		{"empty_array", []any{}, `[]`},
 	}
 
 	for _, tc := range testCases {
@@ -52,7 +52,7 @@ func TestFormat(t *testing.T) {
 
 	testCases := []struct {
 		name               string
-		inputData          map[string]interface{}
+		inputData          map[string]any
 		indentUnit         string
 		outputWriter       io.Writer // Allow specifying writer for error testing
 		wantOutput         string    // Expected output if no error
@@ -62,7 +62,7 @@ func TestFormat(t *testing.T) {
 		// --- Successful Cases ---
 		{
 			name:         "simple_no_indent",
-			inputData:    map[string]interface{}{"key": "value", "number": 100},
+			inputData:    map[string]any{"key": "value", "number": 100},
 			indentUnit:   "",
 			outputWriter: nil,
 			wantOutput:   "key    = \"value\"\nnumber = 100\n",
@@ -70,9 +70,9 @@ func TestFormat(t *testing.T) {
 		},
 		{
 			name: "table_with_indent",
-			inputData: map[string]interface{}{
+			inputData: map[string]any{
 				"a":     1,
-				"table": map[string]interface{}{"b": true, "c": "inside"},
+				"table": map[string]any{"b": true, "c": "inside"},
 			},
 			indentUnit:   "  ",
 			outputWriter: nil,
@@ -81,10 +81,10 @@ func TestFormat(t *testing.T) {
 		},
 		{
 			name: "array_table_with_indent",
-			inputData: map[string]interface{}{
-				"arr": []interface{}{
-					map[string]interface{}{"x": 1},
-					map[string]interface{}{"y": 2, "z": 3},
+			inputData: map[string]any{
+				"arr": []any{
+					map[string]any{"x": 1},
+					map[string]any{"y": 2, "z": 3},
 				},
 			},
 			indentUnit:   "  ",
@@ -94,10 +94,10 @@ func TestFormat(t *testing.T) {
 		},
 		{
 			name: "nested_tables_indent",
-			inputData: map[string]interface{}{
-				"server": map[string]interface{}{
+			inputData: map[string]any{
+				"server": map[string]any{
 					"ip":    "1.1.1.1",
-					"ports": map[string]interface{}{"http": 80},
+					"ports": map[string]any{"http": 80},
 				},
 			},
 			indentUnit:   "\t",
@@ -107,7 +107,7 @@ func TestFormat(t *testing.T) {
 		},
 		{
 			name:         "empty_map",
-			inputData:    map[string]interface{}{},
+			inputData:    map[string]any{},
 			indentUnit:   " ",
 			outputWriter: nil,
 			wantOutput:   "",
@@ -117,12 +117,12 @@ func TestFormat(t *testing.T) {
 		// --- Error Cases ---
 		{
 			name: "error_bad_array_item",
-			inputData: map[string]interface{}{
+			inputData: map[string]any{
 				"key_before": "value", // Add a key before to ensure simple key processing happens first
-				"bad_arr": []interface{}{
-					map[string]interface{}{"a": 1}, // Good item
-					"not a map",                    // Bad item - should cause error
-					map[string]interface{}{"b": 2}, // Item after bad one (shouldn't be processed)
+				"bad_arr": []any{
+					map[string]any{"a": 1}, // Good item
+					"not a map",            // Bad item - should cause error
+					map[string]any{"b": 2}, // Item after bad one (shouldn't be processed)
 				},
 				"key_after": "value2", // Add a key after
 			},
@@ -133,7 +133,7 @@ func TestFormat(t *testing.T) {
 		},
 		{
 			name:               "error_write_failed",
-			inputData:          map[string]interface{}{"key": "value"}, // Valid data needed
+			inputData:          map[string]any{"key": "value"}, // Valid data needed
 			indentUnit:         "",
 			outputWriter:       &errorWriter{err: errSimulatedWriteFailed},
 			wantOutput:         "",

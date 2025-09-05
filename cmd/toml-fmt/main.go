@@ -101,7 +101,7 @@ func getInput(
 			err = errors.New(
 				"cannot use -w flag when reading from stdin",
 			) // Return an error if the -w flag is used with stdin
-			return
+			return inputReader, filename, sourceName, err
 		}
 		sourceName = "stdin"   // Set the source name to stdin
 		inputReader = os.Stdin // os.Stdin is an *os.File, which is an io.ReadCloser. Assign standard input to the input reader.
@@ -113,11 +113,11 @@ func getInput(
 		file, err = os.Open(filename) //nolint:gosec // Open the file with the given filename
 		if err != nil {
 			err = fmt.Errorf("opening %s: %w", sourceName, err) // Wrap the error with context
-			return
+			return inputReader, filename, sourceName, err
 		}
 		inputReader = file // Assign the opened file to the input reader
 	}
-	return // Return the determined reader, names, and nil error
+	return inputReader, filename, sourceName, err // Return the determined reader, names, and nil error
 }
 
 // runFormattingLogic contains the core program logic after flag parsing.
@@ -172,7 +172,7 @@ func runFormattingLogic(indentEnable, writeToFile bool, filenameArg string) erro
 	}
 
 	// Parse TOML
-	var data map[string]interface{}         // Declare a variable to hold the parsed TOML data
+	var data map[string]any                 // Declare a variable to hold the parsed TOML data
 	err = toml.Unmarshal(inputBytes, &data) // Parse the TOML data from the input bytes
 	if err != nil {
 		// Provide detailed parsing error if possible
