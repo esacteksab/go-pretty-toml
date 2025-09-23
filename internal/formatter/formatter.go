@@ -357,9 +357,7 @@ func formatMap(
 
 	// Process regular tables
 	err = formatRegularTables(dataMap, tableKeys, currentPath, currentIndent, indentUnit, output)
-	if err != nil {
-		return err
-	}
 
-	return nil
+	// returns err, which will be nil if no error occurred, or the error itself otherwise
+	return err
 }
