@@ -16,4 +16,4 @@ permissions:
 
 jobs:
   goreleaser-reusable:
-    uses: esacteksab/.github/.github/workflows/go-release.yml@5fde5a83a2230ae79ce89fafd3840893e2af9b7a  # v0.20.0
+    uses: esacteksab/.github/.github/workflows/go-release.yml@0156ec320a97babe938ec9cc04b60d2217fe001b  # v0.20.1
