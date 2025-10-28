@@ -3,7 +3,7 @@ distlib==0.4.0
 filelock==3.20.0
 identify==2.6.15
 nodeenv==1.9.1
-pip==25.2
+pip==25.3
 platformdirs==4.5.0
 pre-commit==4.3.0
 pyyaml==6.0.3
