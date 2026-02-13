@@ -1,3 +1,4 @@
+---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -21,7 +22,7 @@ repos:
         name: "Check Merge Conflicts"
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.28.0
+    rev: v8.30.0
     hooks:
       - id: gitleaks
         name: "Git Leaks"
@@ -33,7 +34,7 @@ repos:
         name: "Keep Sorted"
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.33.3
+    rev: 0.36.1
     hooks:
       - id: check-github-workflows
       - id: check-dependabot
@@ -128,7 +129,7 @@ repos:
           - mdformat-footnote
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.35.5
+    rev: v1.43.3
     hooks:
       - id: typos
         args: [--force-exclude]
@@ -141,7 +142,7 @@ repos:
         name: "Shell Check"
 
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.18.1
+    rev: v0.20.0
     hooks:
       - id: markdownlint-cli2
         name: "Markdown Lint"
