@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to push tags and commits
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0 # Full history needed for svu to analyze commits
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
+
+      - name: Set up Go
+        uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Install SVU
+        run: go install github.com/caarlos0/svu/v3@v3.4.0
+
+      - name: Get next version (dry run)
+        id: version
+        run: |
+          TAG=$(svu next --always --v0 --json | jq -r .version)
+          if [ -z "$TAG" ]; then
+            echo "No new tag generated. Check commit messages"
+            exit 1
+          fi
+          echo "$TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Verify tag and create draft release
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists. Skipping tag creation."
+          else
+            gh release create "$TAG" --draft --generate-notes
+          fi
