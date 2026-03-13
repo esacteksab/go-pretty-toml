@@ -87,9 +87,10 @@ func formatSimpleKeys(
 ) {
 	for _, k := range simpleKeys {
 		v := dataMap[k] // Get the value associated with the key
+		displayKey := formatKey(k)
 		padding := strings.Repeat(
 			" ",
-			maxKeyLen-len(k),
+			maxKeyLen-len(displayKey),
 		) // Calculate padding for alignment
 		formattedValue := formatTomlValue(
 			v,
@@ -98,7 +99,7 @@ func formatSimpleKeys(
 			output,
 			"%s%s%s = %s\n",
 			currentIndent,
-			k,
+			displayKey,
 			padding,
 			formattedValue,
 		) // Write the formatted key-value pair to the output buffer
@@ -341,8 +342,9 @@ func formatMap(
 		}
 		// If we get here, it's a simple key-value pair
 		simpleKeys = append(simpleKeys, k) // Add the key to the list of simple keys
-		if len(k) > maxKeyLen {
-			maxKeyLen = len(k) // Track max key length for alignment
+		// If a multi word key becomes the longest key, the subsequent keys get padded to align =
+		if fkLen := len(formatKey(k)); fkLen > maxKeyLen {
+			maxKeyLen = fkLen
 		}
 	}
 
@@ -360,4 +362,15 @@ func formatMap(
 
 	// returns err, which will be nil if no error occurred, or the error itself otherwise
 	return err
+}
+
+// formatKey returns a TOML-safe representation of a key.
+// Keys containing spaces are wrapped in double quotes to comply with
+// the TOML spec, which requires quoting keys that contain whitespace.
+// Keys without spaces are returned unchanged.
+func formatKey(k string) string {
+	if strings.Contains(k, " ") {
+		return fmt.Sprintf("%q", k) // Wrap the key in double quotes (e.g. "multi word")
+	}
+	return k // No quoting needed for simple keys
 }

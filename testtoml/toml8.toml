@@ -1,0 +1,21 @@
+[tool]
+
+  [tool.commitizen]
+    major_version_zero = true
+    name               = "cz_customize"
+    tag_format         = "v$version"
+    version            = "0.80.0"
+    version_scheme     = "semver2"
+
+    [tool.commitizen.customize]
+      bump_pattern   = "^(feat|fix|refactor|perf|ci|chore)(\\(.+\\))?(!)?:"
+      schema_pattern = "^(feat|fix|refactor|perf|ci|chore)(\\(.+\\))?(!)?:(\\s.*)"
+
+      [tool.commitizen.customize.bump_map]
+        "BREAKING CHANGE" = "MAJOR"
+        chore             = "PATCH"
+        ci                = "PATCH"
+        feat              = "MINOR"
+        fix               = "PATCH"
+        perf              = "PATCH"
+        refactor          = "PATCH"
