@@ -17,6 +17,7 @@ func TestFormatTomlValue(t *testing.T) {
 		want  string
 	}{
 		{"string", "hello", `"hello"`},
+		{"string", "BREAKING CHANGE", `"BREAKING CHANGE"`},
 		{"int", 123, "123"},
 		{"float", 123.45, "123.45"},
 		{"bool_true", true, "true"},
@@ -66,6 +67,14 @@ func TestFormat(t *testing.T) {
 			indentUnit:   "",
 			outputWriter: nil,
 			wantOutput:   "key    = \"value\"\nnumber = 100\n",
+			wantErr:      false,
+		},
+		{
+			name:         "multi_word_key",
+			inputData:    map[string]any{"multi word": "value", "number": 100},
+			indentUnit:   "",
+			outputWriter: nil,
+			wantOutput:   "\"multi word\" = \"value\"\nnumber       = 100\n",
 			wantErr:      false,
 		},
 		{
