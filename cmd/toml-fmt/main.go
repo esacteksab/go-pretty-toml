@@ -110,7 +110,7 @@ func getInput(
 		filename = filepath.Clean(filenameArg)          // Clean the filename argument to remove any relative pathing
 		sourceName = fmt.Sprintf("file '%s'", filename) // Set the source name to the filename
 		var file *os.File
-		file, err = os.Open(filename) //nolint:gosec // Open the file with the given filename
+		file, err = os.Open(filename) // Open the file with the given filename
 		if err != nil {
 			err = fmt.Errorf("opening %s: %w", sourceName, err) // Wrap the error with context
 			return inputReader, filename, sourceName, err
