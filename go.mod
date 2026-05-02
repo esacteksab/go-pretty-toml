@@ -4,7 +4,7 @@ go 1.26.1
 
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
-	github.com/pelletier/go-toml/v2 v2.3.0
+	github.com/pelletier/go-toml/v2 v2.3.1
 	github.com/rogpeppe/go-internal v1.14.1
 )
 
