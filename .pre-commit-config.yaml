@@ -113,7 +113,7 @@ repos:
         pass_filenames: false
 
   - repo: https://github.com/hukkin/mdformat
-    rev: 0.7.22
+    rev: 1.0.0
     hooks:
       - id: mdformat
         exclude: ^testdata/
