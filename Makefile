@@ -1,5 +1,6 @@
 MAKEFLAGS += --warn-undefined-variables
 SHELL := bash
+GO_VERSION ?=
 .SHELLFLAGS := -eu -o pipefail -c
 .DEFAULT_GOAL := all
 .DELETE_ON_ERROR:
@@ -56,3 +57,12 @@ update:
 	go get -u ./...
 	go get -u -modfile=go.tool.mod tool
 	go mod tidy
+
+.PHONY: update-go-version
+update-go-version:
+	@if [ -z "$(or $(GO_VERSION),$(version))" ]; then \
+		echo "Usage: make update-go-version GO_VERSION=1.25.10"; \
+		echo "   or: make update-go-version version=1.25.10"; \
+		exit 1; \
+	fi
+	./scripts/update-go-version.sh "$(or $(GO_VERSION),$(version))"
