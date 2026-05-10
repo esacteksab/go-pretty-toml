@@ -28,13 +28,13 @@ repos:
         name: "Git Leaks"
 
   - repo: https://github.com/google/keep-sorted
-    rev: v0.7.1
+    rev: v0.8.0
     hooks:
       - id: keep-sorted
         name: "Keep Sorted"
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.36.1
+    rev: 0.37.2
     hooks:
       - id: check-github-workflows
       - id: check-dependabot
@@ -43,11 +43,7 @@ repos:
         files: ^\.pre-commit-config.yaml+$
         types:
           - yaml
-        args:
-          [
-            "--schemafile",
-            "https://json.schemastore.org/pre-commit-config.json",
-          ]
+        args: [ "--schemafile", "https://json.schemastore.org/pre-commit-config.json" ]
       - id: check-jsonschema
         name: "Validate MarkdownLint"
         files: ^\.markdownlint-cli2.yaml+$
@@ -56,7 +52,8 @@ repos:
         args:
           [
             "--schemafile",
-            "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/v0.17.2/schema/markdownlint-cli2-config-schema.json",
+            "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/v\
+              0.17.2/schema/markdownlint-cli2-config-schema.json",
           ]
       - id: check-jsonschema
         name: "Validate golangci-lint config"
@@ -73,7 +70,7 @@ repos:
         files: ^\.goreleaser.yaml+$
         types:
           - yaml
-        args: ["--schemafile", "https://goreleaser.com/static/schema.json"]
+        args: [ "--schemafile", "https://goreleaser.com/static/schema.json" ]
 
   - repo: local
     hooks:
@@ -129,10 +126,10 @@ repos:
           - mdformat-footnote
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.43.3
+    rev: v1.46.1
     hooks:
       - id: typos
-        args: [--force-exclude]
+        args: [ --force-exclude ]
         name: "Spell Check"
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
@@ -142,7 +139,7 @@ repos:
         name: "Shell Check"
 
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.20.0
+    rev: v0.22.1
     hooks:
       - id: markdownlint-cli2
         name: "Markdown Lint"

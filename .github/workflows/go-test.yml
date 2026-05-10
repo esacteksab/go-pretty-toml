@@ -24,4 +24,4 @@ permissions:
 
 jobs:
   go-test:
-    uses: esacteksab/.github/.github/workflows/go-test.yml@aa2aebc561767f858796347ec146648ee9c153b8  # v0.80.23
+    uses: esacteksab/.github/.github/workflows/go-test.yml@23679f39c08d50a75327778a902135a58785e307  # v0.80.27
