@@ -1,61 +1,77 @@
+---
 version: 2
 updates:
-  - package-ecosystem: "pip"
-    directory: "/"
+  - package-ecosystem: pip
+    directory: /
+    labels:
+      - dependencies
+      - python
     groups:
-      python-minor-and-patch:
+      py-minor-and-patch:
         update-types:
-          - "minor"
-          - "patch"
+          - minor
+          - patch
     schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "17:00"
-      timezone: "America/Chicago"
+      interval: weekly
+      day: friday
+      time: 17:00
+      timezone: America/Chicago
+    cooldown:
+      default-days: 5 # zizmor: ignore[dependabot-cooldown]
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
 
-  - package-ecosystem: "gomod"
-    directory: "/"
-    groups:
-      go-minor-and-patch:
-        update-types:
-          - "minor"
-          - "patch"
-    schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "17:00"
-
-      timezone: "America/Chicago"
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: npm
+    directory: /
+    labels:
+      - dependencies
+      - javascript
+      - npm
     groups:
       npm-minor-and-patch:
         update-types:
-          - "minor"
-          - "patch"
+          - minor
+          - patch
     schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "17:00"
-      timezone: "America/Chicago"
+      interval: weekly
+      day: friday
+      time: 17:00
+      timezone: America/Chicago
+    cooldown:
+      default-days: 5 # zizmor: ignore[dependabot-cooldown]
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: github-actions # zizmor: ignore[dependabot-cooldown]
+    directory: /
+    labels:
+      - dependencies
+      - github_actions
     groups:
-      github-actions:
+      gha-minor-and-patch:
         update-types:
-          - "minor"
-          - "patch"
+          - minor
+          - patch
     schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "17:00"
-      timezone: "America/Chicago"
+      interval: weekly
+      day: friday
+      time: 17:00
+      timezone: America/Chicago
 
-  - package-ecosystem: "docker"
-    directory: "/"
+  - package-ecosystem: pre-commit # zizmor: ignore[dependabot-cooldown]
+    directory: /
+    labels:
+      - dependencies
+      - dev
+    groups:
+      pre-commit-minor-and-patch:
+        update-types:
+          - minor
+          - patch
     schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "17:00"
-      timezone: "America/Chicago"
+      interval: weekly
+      day: friday
+      time: 17:00
+      timezone: America/Chicago
