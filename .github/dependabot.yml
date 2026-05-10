@@ -14,7 +14,7 @@ updates:
     schedule:
       interval: weekly
       day: friday
-      time: 17:00
+      time: "17:00"
       timezone: America/Chicago
     cooldown:
       default-days: 5 # zizmor: ignore[dependabot-cooldown]
@@ -36,7 +36,7 @@ updates:
     schedule:
       interval: weekly
       day: friday
-      time: 17:00
+      time: "17:00"
       timezone: America/Chicago
     cooldown:
       default-days: 5 # zizmor: ignore[dependabot-cooldown]
@@ -57,7 +57,7 @@ updates:
     schedule:
       interval: weekly
       day: friday
-      time: 17:00
+      time: "17:00"
       timezone: America/Chicago
 
   - package-ecosystem: pre-commit # zizmor: ignore[dependabot-cooldown]
@@ -73,5 +73,5 @@ updates:
     schedule:
       interval: weekly
       day: friday
-      time: 17:00
+      time: "17:00"
       timezone: America/Chicago
