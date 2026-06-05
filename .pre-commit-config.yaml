@@ -126,7 +126,7 @@ repos:
           - mdformat-footnote
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.46.2
+    rev: v1.47.2
     hooks:
       - id: typos
         args: [ --force-exclude ]
