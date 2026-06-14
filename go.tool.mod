@@ -1,7 +1,7 @@
 // How to use https://www.alexedwards.net/blog/how-to-manage-tool-dependencies-in-go-1.24-plus
 module github.com/esacteksab/go-pretty-toml
 
-go 1.25.10
+go 1.26.4
 
 tool (
 	golang.org/x/vuln/cmd/govulncheck

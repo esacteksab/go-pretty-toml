@@ -1,6 +1,8 @@
 [files]
-extend-exclude = ['.goreleaser.yaml']
+  extend-exclude = ['.goreleaser.yaml']
 
 [default.extend-words]
-Hashi = 'Hashi'
-ERRO = 'ERRO'
+  Hashi = 'Hashi'
+  ERRO  = 'ERRO'
+  etry  = "etry"
+  fter  = "fter"
