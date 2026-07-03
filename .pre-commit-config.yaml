@@ -28,7 +28,7 @@ repos:
         name: "Git Leaks"
 
   - repo: https://github.com/google/keep-sorted
-    rev: v0.9.0
+    rev: v0.9.1
     hooks:
       - id: keep-sorted
         name: "Keep Sorted"
