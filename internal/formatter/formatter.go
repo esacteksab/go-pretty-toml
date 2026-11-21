@@ -325,7 +325,8 @@ func formatMap(
 						// Error if array mixes tables and non-tables
 						fullPathString := strings.Join(append(append([]string{}, currentPath...), k), ".")
 						return fmt.Errorf(
-							"key '%s': arrays cannot mix tables and non-tables", fullPathString)
+							"key '%s': arrays cannot mix tables and non-tables", fullPathString,
+						)
 					}
 					break
 				}
