@@ -137,7 +137,7 @@ repos:
         name: "Shell Check"
 
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.24.1
+    rev: v0.24.2
     hooks:
       - id: markdownlint-cli2
         name: "Markdown Lint"
